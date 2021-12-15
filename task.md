@@ -8,7 +8,7 @@
 
 - for __18.4-__ `Underweight` `BLUE`
 
-- from __15.5__ to __24.9__ `Healthy Weight` `GREEN`
+- from __18.5__ to __24.9__ `Healthy Weight` `GREEN`
 
 - from __25__ to __29.9__ `Overweight` `YELLOW`
 
