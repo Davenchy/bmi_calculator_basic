@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'screens/main_screen.dart';
 
@@ -12,6 +13,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.pink,
+        textTheme: GoogleFonts.latoTextTheme(Theme.of(context).textTheme),
         appBarTheme: const AppBarTheme(
           color: Colors.white,
           titleTextStyle: TextStyle(

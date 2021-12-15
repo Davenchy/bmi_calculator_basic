@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../utils/bmi.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/bmi_description.dart';
 import '../widgets/custom_text_field.dart';
 
@@ -55,34 +56,40 @@ class _MainScreenState extends State<MainScreen> {
         centerTitle: true,
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: formKey,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            child: Column(
-              children: [
-                if (bmi != null) BMIDescription(bmi!),
-                const SizedBox(height: 24),
-                CustomTextField(
-                  label: 'Height',
-                  suffix: 'cm',
-                  controller: heightController,
-                  focusNode: heightFocusNode,
-                  nextFocusNode: weightFocusNode,
-                  validator: (val) => propertyValidator('height', val),
-                ),
-                const SizedBox(height: 24),
-                CustomTextField(
-                  label: 'Weight',
-                  suffix: 'kg',
-                  controller: weightController,
-                  focusNode: weightFocusNode,
-                  validator: (val) => propertyValidator('weight', val),
-                  onSubmitted: (_) => _calculate(),
-                ),
-                const SizedBox(height: 24),
-              ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                children: [
+                  if (bmi != null) BMIDescription(bmi!),
+                  const SizedBox(height: 24),
+                  CustomTextField(
+                    label: 'Height',
+                    suffix: 'cm',
+                    controller: heightController,
+                    focusNode: heightFocusNode,
+                    nextFocusNode: weightFocusNode,
+                    validator: (val) => propertyValidator('height', val),
+                  ),
+                  const SizedBox(height: 24),
+                  CustomTextField(
+                    label: 'Weight',
+                    suffix: 'kg',
+                    controller: weightController,
+                    focusNode: weightFocusNode,
+                    validator: (val) => propertyValidator('weight', val),
+                    onSubmitted: (_) => calculate(),
+                  ),
+                  const SizedBox(height: 32),
+                  CustomButton(label: 'Calculate!', onPressed: calculate),
+                  const SizedBox(height: 32),
+                  CustomButton(label: 'Last BMI', onPressed: loadLastBMI),
+                ],
+              ),
             ),
           ),
         ),
@@ -100,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
     if (heightValue < 0) return '$property must be positive';
   }
 
-  void _calculate() {
+  void calculate() {
     if (!(formKey.currentState?.validate() ?? false)) return;
 
     final double height = double.tryParse(heightController.text) ?? 0;
@@ -110,4 +117,6 @@ class _MainScreenState extends State<MainScreen> {
 
     setState(() => this.bmi = bmi);
   }
+
+  void loadLastBMI() {}
 }
