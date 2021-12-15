@@ -1,5 +1,6 @@
-import 'package:bmi_calculator/utils/bmi.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/bmi.dart';
 
 class BMIDescription extends StatelessWidget {
   const BMIDescription(this.bmi, {Key? key}) : super(key: key);

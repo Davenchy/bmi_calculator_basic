@@ -5,6 +5,7 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     required this.label,
     this.suffix,
+    this.hint,
     this.controller,
     this.focusNode,
     this.nextFocusNode,
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
 
   final String label;
   final String? suffix;
+  final String? hint;
   final TextEditingController? controller;
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
@@ -31,6 +33,7 @@ class CustomTextField extends StatelessWidget {
       style: const TextStyle(fontSize: 24),
       decoration: InputDecoration(
         labelText: label,
+        hintText: hint,
         suffixText: suffix,
         labelStyle: const TextStyle(
           fontWeight: FontWeight.bold,

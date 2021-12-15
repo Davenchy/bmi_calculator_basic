@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'bmi_screen.dart';
 import '../utils/bmi.dart';
+import '../utils/bmi_memory.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/bmi_description.dart';
 import '../widgets/custom_text_field.dart';
@@ -23,20 +25,25 @@ class _MainScreenState extends State<MainScreen> {
   late final FocusNode heightFocusNode;
   late final FocusNode weightFocusNode;
 
+  late final BMIMemory memory;
+
   @override
   void initState() {
+    super.initState();
+
     formKey = GlobalKey();
 
-    heightController = TextEditingController(text: '0');
-    weightController = TextEditingController(text: '0');
+    heightController = TextEditingController();
+    weightController = TextEditingController();
     heightFocusNode = FocusNode();
     weightFocusNode = FocusNode();
 
+    memory = BMIMemory();
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       heightFocusNode.requestFocus();
+      memory.load();
     });
-
-    super.initState();
   }
 
   @override
@@ -45,6 +52,8 @@ class _MainScreenState extends State<MainScreen> {
     weightController.dispose();
     heightFocusNode.dispose();
     weightFocusNode.dispose();
+
+    memory.dispose();
     super.dispose();
   }
 
@@ -65,11 +74,17 @@ class _MainScreenState extends State<MainScreen> {
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
                 children: [
-                  if (bmi != null) BMIDescription(bmi!),
+                  AnimatedBuilder(
+                    animation: memory,
+                    builder: (context, _) => bmi != null
+                        ? BMIDescription(bmi!)
+                        : const SizedBox.shrink(),
+                  ),
                   const SizedBox(height: 24),
                   CustomTextField(
                     label: 'Height',
                     suffix: 'cm',
+                    hint: '0',
                     controller: heightController,
                     focusNode: heightFocusNode,
                     nextFocusNode: weightFocusNode,
@@ -79,6 +94,7 @@ class _MainScreenState extends State<MainScreen> {
                   CustomTextField(
                     label: 'Weight',
                     suffix: 'kg',
+                    hint: '0',
                     controller: weightController,
                     focusNode: weightFocusNode,
                     validator: (val) => propertyValidator('weight', val),
@@ -87,7 +103,15 @@ class _MainScreenState extends State<MainScreen> {
                   const SizedBox(height: 32),
                   CustomButton(label: 'Calculate!', onPressed: calculate),
                   const SizedBox(height: 32),
-                  CustomButton(label: 'Last BMI', onPressed: loadLastBMI),
+                  AnimatedBuilder(
+                    animation: memory,
+                    builder: (context, child) =>
+                        memory.hasData ? child! : const SizedBox.shrink(),
+                    child: CustomButton(
+                      label: 'Show Last BMI',
+                      onPressed: loadLastBMI,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -113,10 +137,15 @@ class _MainScreenState extends State<MainScreen> {
     final double height = double.tryParse(heightController.text) ?? 0;
     final double weight = double.tryParse(weightController.text) ?? 0;
 
-    final double bmi = calculateBMI(weight, height / 100);
-
-    setState(() => this.bmi = bmi);
+    bmi = calculateBMI(weight, height / 100);
+    memory.save(bmi!);
   }
 
-  void loadLastBMI() {}
+  void loadLastBMI() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LastBMIScreen(memory: memory),
+      ),
+    );
+  }
 }

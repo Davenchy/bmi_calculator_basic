@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'utils/bmi_memory.dart';
 
-void main() => runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await BMIMemory.initialize();
+  runApp(const MyApp());
+}

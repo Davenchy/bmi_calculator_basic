@@ -21,6 +21,9 @@ class MyApp extends StatelessWidget {
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),
+          iconTheme: IconThemeData(
+            color: Colors.pink,
+          ),
         ),
       ),
       home: const MainScreen(),
